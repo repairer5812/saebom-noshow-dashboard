@@ -15,3 +15,4 @@ GitHub Copilot 실습 교육용 정적 웹 앱입니다. 새봄스페이스와 �
 
 ## 연습 브랜치
 - `practice-bugs`: 버그를 심어 둔 구현. 테스트 실패를 읽고 고치는 연습용
+- `practice-injection`: 숨은 지시문이 든 문서(docs/고객의견.md). 에이전트 보안 연습용
