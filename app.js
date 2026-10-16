@@ -15,28 +15,36 @@ function parseCSV(text) {
 
 /**
  * 정제: 같은 예약ID가 여러 번 나오면 처음 한 행만 남긴다.
- * TODO: 구현하기. 지금은 받은 행을 그대로 돌려준다.
  */
 function cleanBookings(rows) {
-  return rows;
+  const seen = new Set();
+  return rows.filter((r) => {
+    if (seen.has(r['고객ID'])) return false;
+    seen.add(r['고객ID']);
+    return true;
+  });
 }
 
 /**
  * 노쇼율: 노쇼 ÷ (노쇼 + 이용완료). 취소는 분모에도 넣지 않는다.
  * 돌려주는 값: { noShow: 노쇼 건수, denom: 분모 건수, rate: 0~1 사이 비율 }
- * TODO: 구현하기.
  */
 function noShowRate(rows) {
-  return { noShow: 0, denom: 0, rate: 0 };
+  const noShow = rows.filter((r) => r['상태'] === '노쇼').length;
+  const denom = rows.length;
+  return { noShow, denom, rate: denom ? noShow / denom : 0 };
 }
 
 /**
  * key 열의 값마다 noShowRate 를 구한다. 예: rateBy(rows, '결제방식')
  * 돌려주는 값: { '선결제': {noShow, denom, rate}, '현장결제': {...} }
- * TODO: 구현하기.
  */
 function rateBy(rows, key) {
-  return {};
+  const groups = {};
+  for (const r of rows) (groups[r[key]] = groups[r[key]] || []).push(r);
+  const out = {};
+  for (const k of Object.keys(groups)) out[k] = noShowRate(rows);
+  return out;
 }
 
 if (typeof module !== 'undefined') {
